@@ -1,0 +1,2 @@
+class GemVersionController < ApplicationController
+end
