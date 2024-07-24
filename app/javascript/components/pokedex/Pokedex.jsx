@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { PokemonList } from "./PokemonList";
 import { getPokemonList } from "../../functions/calls";
-import { getPokemonListData } from "../../functions/common";
+import { getPokemonListData, LIMIT } from "../../functions/common";
+import PokemonItem from "./PokemonItem";
 
 export const Pokedex = () => {
   const [pokemonList, setPokemonList] = useState([]);
@@ -9,29 +9,53 @@ export const Pokedex = () => {
   const [activePokemon, setActivePokemon] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [totalPokemons, setTotalPokemons] = useState(0);
+  const [pokemonItems, setPokemonItems] = useState([]);
 
-  const getPokemons = async () => {
+  const getPokemons = ({ isBackwards = false }) => {
     setIsLoading(true);
-    await getPokemonList({ offset })
+    getPokemonList({ offset })
       .then((response) => {
         const totalPokemons = response?.data?.count;
         setTotalPokemons(totalPokemons);
-        const pokemonList = getPokemonListData({
-          pokemonList: response?.data?.results,
+        return response?.data?.results;
+      })
+      .then((results) => {
+        const pokemonPromise = getPokemonListData({
+          pokemonList: results,
         });
-        setPokemonList(pokemonList);
+        pokemonPromise.then((values) => {
+          const pokemonList = values.map((x) => x.data);
+          setPokemonList(pokemonList);
+          loadPokemonItems(pokemonList);
+        });
+        const offset = isBackwards ? offset - LIMIT : offset + LIMIT;
+        setOffset(offset);
       })
       .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
-    getPokemons();
+    getPokemons({});
   }, []);
+
+  const loadPokemonItems = (list) => {
+    const pokemonItems = list.map((pokemon) => {
+      console.log(pokemon);
+      return (
+        <PokemonItem
+          pokemon={pokemon}
+          handleClick={(pokemon) => setActivePokemon(pokemon)}
+          key={pokemon.id}
+        />
+      );
+    });
+    setPokemonItems(pokemonItems);
+  };
 
   return (
     <div className="pokedex">
       <div className="pokedex-screen">
-        <PokemonList pokemonList={pokemonList} handleClick={() => {}} />
+        <div className="pokemon-list">{pokemonItems}</div>
       </div>
     </div>
   );
