@@ -6,6 +6,7 @@ export const PokemonItem = ({ pokemon, handleClick }) => {
   const pokemonImage = generateImageLink({ pokemonId });
   const pokemonName = pokemon.name;
   const pokemonTitle = `#${pokemonId} ${pokemonName}`;
+  console.log(pokemon)
   return (
     <div className="pokemon-item" onClick={handleClick}>
       <img src={pokemonImage} alt={pokemonTitle} />

@@ -10,13 +10,6 @@ body {
   background-image: image-url("bg-pokedex.png");
 }
 
-.main-pokedex {
-  background-color: #cc0000;
-  width: 100%;
-  height: calc(100vh - 75px);
-  border-radius: 0 50px 50px 50px;
-}
-
 .main-pokedex-tab {
   height: 35px;
   margin-top: 20px;
@@ -59,6 +52,40 @@ body {
     margin-left: 12px;
   }
 }
+
+.main-pokedex {
+  background-color: #cc0000;
+  width: 100%;
+  height: calc(100vh - 75px);
+  border-radius: 0 50px 50px 50px;
+
+  .pokedex-slope {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px 0px 20px;
+    align-items: center;
+    font-size: 30px;
+    color: #DDD;
+  }
+
+  .pokeball-icon {
+    height: 80px;
+    margin-right: 8px;
+  }
+
+  .pokedex {
+    padding: 10px 20px 20px 20px;
+    height: calc(100% - 100px);
+
+    .pokedex-screen {
+      height: 100%;
+      width: 100%;
+      background-color: #FFF;
+      border-radius: 20px;
+    }
+  }
+}
+
 
 @media (min-width: 576px) {
   .main-pokedex {
