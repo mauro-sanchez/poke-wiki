@@ -21,10 +21,10 @@ export const PokemonItem = ({ pokemon, handleClick }) => {
     <div className="pokemon-item" onClick={handleClick}>
       <div className="card">
         <div className={classNameType}>
-          <div className="pokemon-number">#{pokemon.order}</div>
+          <div className="pokemon-number">#{pokemon.id}</div>
           <img
             src={pokemonImage}
-            alt={`#${pokemon.order} ${pokemonName}`}
+            alt={`#${pokemon.id} ${pokemonName}`}
             className="pokemon-image "
           />
         </div>

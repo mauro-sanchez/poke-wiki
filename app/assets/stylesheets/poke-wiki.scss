@@ -87,6 +87,7 @@ body {
       border-radius: 20px;
       display: flex;
       overflow: hidden;
+      flex-direction: column;
 
       .pokemon-list {
         overflow-y: auto;

@@ -1,0 +1,27 @@
+.pagination {
+  margin: 0;
+  justify-content: space-between;
+
+  .previous, .next{
+    flex: 1;
+    min-width: 40px;
+  }
+
+  .page-item.active > .page-link{
+    background-color: #cc0000;
+    border-color: #aa0000;
+  }
+
+  .page-item.active > .page-link:focus {
+    color: #fff;
+  }
+
+  .page-link {
+    color:#440000;
+  }
+
+  .page-link:focus {
+    box-shadow: 0 0 3px #aa0000;
+    color: #440000;
+  }
+}

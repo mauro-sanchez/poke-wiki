@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import { getPokemonList } from "../../functions/calls";
 import { getPokemonListData, LIMIT } from "../../functions/common";
 import PokemonItem from "./PokemonItem";
+import Spinner from "../Spinner";
+import Pagination from "./Pagination";
 
 export const Pokedex = () => {
-  const [pokemonList, setPokemonList] = useState([]);
+  // const [pokemonList, setPokemonList] = useState([]);
   const [offset, setOffset] = useState(0);
   const [activePokemon, setActivePokemon] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [totalPokemons, setTotalPokemons] = useState(0);
   const [pokemonItems, setPokemonItems] = useState([]);
 
-  const getPokemons = ({ isBackwards = false }) => {
+  const getPokemons = ({ newOffset = 0 }) => {
     setIsLoading(true);
-    getPokemonList({ offset })
+    getPokemonList({ offset: newOffset })
       .then((response) => {
         const totalPokemons = response?.data?.count;
         setTotalPokemons(totalPokemons);
@@ -25,13 +27,12 @@ export const Pokedex = () => {
         });
         pokemonPromise.then((values) => {
           const pokemonList = values.map((x) => x.data);
-          setPokemonList(pokemonList);
+          // setPokemonList(pokemonList);
           loadPokemonItems(pokemonList);
         });
-        const offset = isBackwards ? offset - LIMIT : offset + LIMIT;
-        setOffset(offset);
+        setOffset(newOffset);
       })
-      .finally(() => setIsLoading(false));
+      .catch((error) => console.error(error));
   };
 
   useEffect(() => {
@@ -50,12 +51,24 @@ export const Pokedex = () => {
       );
     });
     setPokemonItems(pokemonItems);
+    setIsLoading(false);
+  };
+
+  const handlePageClick = (page) => {
+    const newOffset = page * LIMIT - LIMIT;
+    getPokemons({ newOffset });
   };
 
   return (
     <div className="pokedex">
+      <Spinner isLoading={isLoading} />
       <div className="pokedex-screen">
         <div className="pokemon-list">{pokemonItems}</div>
+        <Pagination
+          currentOffset={offset}
+          totalCount={totalPokemons}
+          handlePageClick={handlePageClick}
+        />
       </div>
     </div>
   );

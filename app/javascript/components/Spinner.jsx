@@ -1,9 +1,9 @@
 import React from "react";
-import { InfinitySpin } from "react-loader-spinner";
+import { ProgressBar } from "react-loader-spinner";
 
-const Spinner = ({ loading }) => (
-  <div className={`spinner-container ${loading ? "loading" : ""}`}>
-    <InfinitySpin visible={loading} color="#08182f" />
+const Spinner = ({ isLoading }) => (
+  <div className={`spinner-container ${isLoading ? "loading" : ""}`}>
+    <ProgressBar visible={isLoading} color="#08182f" />
   </div>
 );
 
