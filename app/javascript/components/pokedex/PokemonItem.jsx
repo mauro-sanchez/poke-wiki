@@ -16,12 +16,15 @@ export const PokemonItem = ({ pokemon, handleClick }) => {
       </div>
     );
   });
-  console.log(pokemon);
+  const abilities = pokemon.abilities
+    .map((ab) => ab.ability.name.replaceAll("-", " "))
+    .join(", ");
   return (
-    <div className="pokemon-item" onClick={handleClick}>
+    <div className="pokemon-item" onClick={() => handleClick(pokemon)}>
       <div className="card">
         <div className={classNameType}>
           <div className="pokemon-number">#{pokemon.id}</div>
+          <div className="pokemon-types">{typeBadges}</div>
           <img
             src={pokemonImage}
             alt={`#${pokemon.id} ${pokemonName}`}
@@ -31,7 +34,11 @@ export const PokemonItem = ({ pokemon, handleClick }) => {
         <div className="card-body">
           <div className="card-title d-flex flex-column">
             <div className="pokemon-title">{pokemonName}</div>
-            <div className="pokemon-types">{typeBadges}</div>
+            <div className="pokemon-weight">{pokemon.weight / 10} kg</div>
+            <div className="row">
+              <div className="col-12 fw-bold">Abilities</div>
+              <div className="col-12 text-capitalize">{abilities}</div>
+            </div>
           </div>
         </div>
       </div>

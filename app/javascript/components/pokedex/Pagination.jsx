@@ -5,7 +5,6 @@ import ResponsivePagination from "react-responsive-pagination";
 export const Pagination = ({ currentOffset, totalCount, handlePageClick }) => {
   const totalPages = Math.ceil(totalCount / LIMIT);
   const currentPage = currentOffset / LIMIT + 1;
-  console.log(totalPages);
   return (
     <ResponsivePagination
       total={totalPages}

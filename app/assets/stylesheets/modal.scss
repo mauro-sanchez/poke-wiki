@@ -1,0 +1,27 @@
+.modal {
+  .modal-content {
+    .modal-header {
+      background-color: #cc0000;
+      color: #fff;
+      text-transform: capitalize;
+
+      .btn-m-close {
+        border: none;
+        background-color: transparent;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 600;
+        margin-right: 8px;
+      }
+
+
+    }
+
+    .modal-body {
+      .modal-pokemon-image {
+        width: 100%;
+        max-width: 360px;
+      }
+    }
+  }
+}

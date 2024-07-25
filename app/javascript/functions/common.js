@@ -13,10 +13,5 @@ export const getPokemonsIds = ({ pokemonList }) =>
 
 export const getPokemonListData = ({ pokemonList }) => {
   const pokemonIds = getPokemonsIds({ pokemonList });
-  // let pokemonListData = [];
   return Promise.all(pokemonIds.map((id) => getPokemonData({ id })))
-  //   const data = values.map((x) => x.data);
-  //   pokemonListData.push(...data);
-  // });
-  // return pokemonListData;
 };
