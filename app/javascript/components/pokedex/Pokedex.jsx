@@ -1,13 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getPokemonFlavorText, getPokemonList } from "../../functions/calls";
-import { getPokemonListData, LIMIT } from "../../functions/common";
+import {
+  getPokemonEvolutions,
+  getPokemonFlavorText,
+  getPokemonList,
+} from "../../functions/calls";
+import {
+  getPokemonDeepData,
+  getPokemonListData,
+  LIMIT,
+} from "../../functions/common";
 import PokemonItem from "./PokemonItem";
 import Spinner from "../Spinner";
 import Pagination from "./Pagination";
 import PokemonModal from "./PokemonModal";
+import axios from "axios";
 
 export const Pokedex = () => {
-  // const [pokemonList, setPokemonList] = useState([]);
   const [offset, setOffset] = useState(0);
   const [activePokemon, setActivePokemon] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -19,30 +27,41 @@ export const Pokedex = () => {
 
   useEffect(() => {
     const modalPokemon = new bootstrap.Modal(pokemonModalRef.current);
-    console.log(modalPokemon);
     // const modalSearch = new bootstrap.Modal(searchModalRef.current);
   }, []);
 
   const getPokemons = ({ newOffset = 0 }) => {
     setIsLoading(true);
+    let pokemonList = [];
     getPokemonList({ offset: newOffset })
       .then((response) => {
         const totalPokemons = response?.data?.count;
         setTotalPokemons(totalPokemons);
         return response?.data?.results;
       })
-      .then((results) => {
-        const pokemonPromise = getPokemonListData({
-          pokemonList: results,
-        });
-        pokemonPromise.then((values) => {
-          const pokemonList = values.map((x) => x.data);
-          // setPokemonList(pokemonList);
-          loadPokemonItems(pokemonList);
-        });
-        setOffset(newOffset);
+      .then((response) => getPokemonListData({ pokemonList: response }))
+      .then((response) => {
+        pokemonList = response.map((x) => x.data);
+        return getPokemonDeepData({ pokemonList });
       })
-      .catch((error) => console.error(error));
+      .then((results) => {
+        pokemonList.forEach((pokemon) => {
+          const pokemonData = results.find(
+            (x) => x.data.name === pokemon.species.name
+          ).data;
+          const flavorTexts = pokemonData.flavor_text_entries.filter(
+            (text) => text.language.name === "en"
+          );
+          pokemon.description = flavorTexts[flavorTexts.length - 1].flavor_text;
+          pokemon.nationalPokedexNumber = pokemonData.pokedex_numbers.find(
+            (x) => x.pokedex.name === "national"
+          ).entry_number;
+          pokemon.evolutionChainUrl = pokemonData.evolution_chain.url;
+        });
+        loadPokemonItems(pokemonList);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setOffset(newOffset));
   };
 
   useEffect(() => {
@@ -65,13 +84,9 @@ export const Pokedex = () => {
 
   const handlePokemonClick = (pokemon) => {
     setIsLoading(true);
-    getPokemonFlavorText({ id: pokemon?.id })
+    getPokemonEvolutions({ url: pokemon.evolutionChainUrl })
       .then((response) => {
-        let pk = pokemon;
-        const flavorTexts = response.data.flavor_text_entries.filter(
-          (text) => text.language.name === "en"
-        );
-        pk.description = flavorTexts[flavorTexts.length - 1].flavor_text;
+        pokemon.evolutionChain = response.data;
         setActivePokemon(pokemon);
       })
       .finally(() => {

@@ -35,10 +35,10 @@ export const getPokemonFlavorText = ({ id }) =>
     },
   });
 
-export const getPokemonEvolutions = ({ id }) =>
+export const getPokemonEvolutions = ({ url }) =>
   axios({
     method: "GET",
-    url: `https://pokeapi.co/api/v2/evolution-chain/${id}`,
+    url,
     responseType: "json",
     headers: {
       "Content-Type": "application/json",

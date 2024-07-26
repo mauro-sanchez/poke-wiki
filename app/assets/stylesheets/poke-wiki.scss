@@ -233,6 +233,14 @@ body {
   }
 }
 
+.evolution-chain * {
+  text-transform: capitalize;
+}
+
+.current-evolution {
+  font-weight: 800;
+}
+
 @media (min-width: 576px) {
   .main-pokedex {
     height: calc(100vh - 83px);

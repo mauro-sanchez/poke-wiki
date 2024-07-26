@@ -25,3 +25,9 @@
     }
   }
 }
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .modal .modal-dialog{
+    max-width: 600px;
+  }
+}

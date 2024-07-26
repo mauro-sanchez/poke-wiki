@@ -17,6 +17,61 @@ export const PokemonModal = ({ pokemon, modalRef }) => {
       </div>
     );
   });
+  const abilities = (pokemon?.abilities || [])
+    .map((ab) => ab.ability.name.replaceAll("-", " "))
+    .join(", ");
+
+  let chain = pokemon?.evolutionChain?.chain;
+  const evolutionChain = chain?.species;
+
+  const evolutionChainComponent = [
+    <div className="col-auto" key="a">
+      <span
+        className={`${
+          evolutionChain?.name === name ? "current-evolution" : ""
+        }`}
+      >
+        {evolutionChain?.name}
+      </span>
+    </div>,
+  ];
+  if ((chain?.evolves_to || []).length > 0) {
+    evolutionChainComponent.push(
+      <div className="col-auto" key="b">
+        {chain.evolves_to.map((x, i) => {
+          return (
+            <div className="row" key={i}>
+              <div className="col-auto" key="c">
+                <span
+                  className={`${
+                    x.species.name === name ? "current-evolution" : ""
+                  }`}
+                >
+                  {x.species.name}
+                </span>
+              </div>
+              {x.evolves_to.length > 0 ? (
+                <div className="col-auto row" key="d">
+                  {x.evolves_to.map((y, j = 100) => (
+                    <div className="col-auto" key={j}>
+                      <span
+                        className={`${
+                          y.species.name === name ? "current-evolution" : ""
+                        }`}
+                      >
+                        {y.species.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
     <div
       className="modal fade"
@@ -55,7 +110,16 @@ export const PokemonModal = ({ pokemon, modalRef }) => {
               <div className="col-12 col-md-6">
                 <div className="row">
                   <div className="col-12 pokemon-title">{pokemonName}</div>
+                  <div className="col-12 pokemon-weight">
+                    {pokemon?.weight / 10} kg
+                  </div>
                   <div className="col-12">{pokemon?.description}</div>
+                  <div className="col-12 mt-3 fw-bold">Abilities</div>
+                  <div className="col-12 text-capitalize">{abilities}</div>
+                  <div className="col-12 mt-3 fw-bold">Evolution chain</div>
+                  <div className="col-12 row evolution-chain">
+                    {evolutionChainComponent}
+                  </div>
                 </div>
               </div>
             </div>
