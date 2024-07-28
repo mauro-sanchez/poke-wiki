@@ -1,5 +1,4 @@
 import React, { createContext, StrictMode } from "react";
-import pokeball from "images/pokeball_icon.svg";
 import Container from "./pokedex/Container";
 import Pokedex from "./pokedex/Pokedex";
 

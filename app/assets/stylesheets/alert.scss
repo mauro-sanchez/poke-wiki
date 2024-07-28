@@ -1,0 +1,25 @@
+.alert {
+  display: none;
+  position: fixed !important;
+  top: 100px;
+}
+
+.alert.primary {
+  background-color: #fff;
+  color: #aa0000;
+  border-color: #aa0000;
+  border-width: 2px;
+
+  &.show {
+    display: flex;
+  }
+
+  .r-close {
+    background-color: transparent;
+    color: #aa0000;
+    margin-right: 12px;
+    border: none;
+    font-size: 40px;
+    line-height: 20px;
+  }
+}
