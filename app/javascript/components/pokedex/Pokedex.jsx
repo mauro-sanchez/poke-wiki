@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+  getPokemonBySearch,
   getPokemonEvolutions,
   getPokemonFlavorText,
   getPokemonList,
@@ -13,7 +14,9 @@ import PokemonItem from "./PokemonItem";
 import Spinner from "../Spinner";
 import Pagination from "./Pagination";
 import PokemonModal from "./PokemonModal";
-import axios from "axios";
+import PokeSearch from "./PokeSearch";
+import { isNull } from "lodash";
+import Alert from "../Alert";
 
 export const Pokedex = () => {
   const [offset, setOffset] = useState(0);
@@ -21,13 +24,38 @@ export const Pokedex = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [totalPokemons, setTotalPokemons] = useState(0);
   const [pokemonItems, setPokemonItems] = useState([]);
+  const [alert, setAlert] = useState({
+    showMessage: false,
+    messageType: undefined,
+    messages: [],
+    messageTitle: undefined,
+  });
 
-  const pokemonModalRef = useRef();
-  const searchModalRef = useRef();
+  const showMessage = (messageType, messageTitle, messages) => {
+    setAlert((prev) => {
+      prev.showMessage = true;
+      prev.messageType = messageType;
+      prev.messageTitle = messageTitle;
+      prev.messages = messages;
+      return { ...prev };
+    });
+  };
+
+  const closeAlert = () =>
+    setAlert((prev) => {
+      prev.showMessage = false;
+      return { ...prev };
+    });
 
   useEffect(() => {
-    const modalPokemon = new bootstrap.Modal(pokemonModalRef.current);
-    // const modalSearch = new bootstrap.Modal(searchModalRef.current);
+    if (alert.showMessage) var timeoutAlert = setTimeout(closeAlert, 3000);
+    return () => clearTimeout(timeoutAlert);
+  }, [alert]);
+
+  const pokemonModalRef = useRef();
+
+  useEffect(() => {
+    new bootstrap.Modal(pokemonModalRef.current);
   }, []);
 
   const getPokemons = ({ newOffset = 0 }) => {
@@ -103,11 +131,59 @@ export const Pokedex = () => {
     getPokemons({ newOffset });
   };
 
+  const handleSearch = (searchText) => {
+    setIsLoading(true);
+    let pokemon = null;
+    getPokemonBySearch({ idOrName: searchText.toLowerCase() })
+      .then((response) => {
+        pokemon = response.data;
+        return getPokemonFlavorText({ id: pokemon.id });
+      })
+      .then((response) => {
+        const flavorTexts = response.data.flavor_text_entries.filter(
+          (text) => text.language.name === "en"
+        );
+        pokemon.description = flavorTexts[flavorTexts.length - 1].flavor_text;
+        pokemon.nationalPokedexNumber = response.data.pokedex_numbers.find(
+          (x) => x.pokedex.name === "national"
+        ).entry_number;
+        pokemon.evolutionChainUrl = response.data.evolution_chain.url;
+        return getPokemonEvolutions({ url: pokemon.evolutionChainUrl });
+      })
+      .then((response) => {
+        pokemon.evolutionChain = response.data;
+        setActivePokemon(pokemon);
+      })
+      .catch((error) => {
+        setActivePokemon(null);
+        if (error.response.status === 404) {
+          showMessage("primary", "Error", ["Pokemon not found"]);
+        }
+        console.error(error);
+      })
+      .finally(() => {
+        if (!isNull(pokemon)) showPokemonModal();
+        setIsLoading(false);
+      });
+  };
+
+  const pokemonListClass = alert.showMessage
+    ? "pokemon-list has-error"
+    : "pokemon-list";
+
   return (
     <div className="pokedex">
       <Spinner isLoading={isLoading} />
+      <Alert
+        alertClass={alert.messageType}
+        isShowing={alert.showMessage}
+        messages={alert.messages}
+        title={alert.messageTitle}
+        onClose={closeAlert}
+      />
       <div className="pokedex-screen">
-        <div className="pokemon-list">{pokemonItems}</div>
+        <PokeSearch handleSearch={handleSearch} />
+        <div className={pokemonListClass}>{pokemonItems}</div>
         <Pagination
           currentOffset={offset}
           totalCount={totalPokemons}

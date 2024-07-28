@@ -1,5 +1,5 @@
 import React from "react";
-import pokeballIcon from "images/pokeball_icon.svg"
+import pokeballIcon from "../../assets/pokeball_icon.svg";
 
 const Container = ({ children }) => {
   return (

@@ -44,3 +44,13 @@ export const getPokemonEvolutions = ({ url }) =>
       "Content-Type": "application/json",
     },
   });
+
+export const getPokemonBySearch = ({ idOrName }) =>
+  axios({
+    method: "GET",
+    url: `https://pokeapi.co/api/v2/pokemon/${idOrName}`,
+    responseType: "json",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
