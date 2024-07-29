@@ -90,7 +90,7 @@ module.exports = function (api) {
           async: false,
         },
       ],
-      isTestEnv || isDevelopmentEnv && [
+      [
         "babel-plugin-transform-import-meta",
         {
           module: "ES6",
