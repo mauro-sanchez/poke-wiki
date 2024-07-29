@@ -13,4 +13,4 @@ Run steps:
 * on second console: ./bin/webpack-dev-server
 
 ## TESTING
-We're going to use Jest to test React files
+We're going to use Jest to test React files. Run `yarn run test`
