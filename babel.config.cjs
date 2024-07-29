@@ -90,12 +90,12 @@ module.exports = function (api) {
           async: false,
         },
       ],
-      // [
-      //   "babel-plugin-transform-import-meta",
-      //   {
-      //     module: "ES6",
-      //   },
-      // ],
+      isTestEnv || isDevelopmentEnv && [
+        "babel-plugin-transform-import-meta",
+        {
+          module: "ES6",
+        },
+      ],
       isProductionEnv && [
         "babel-plugin-transform-react-remove-prop-types",
         {
