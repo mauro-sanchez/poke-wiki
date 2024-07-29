@@ -50,7 +50,7 @@ module.exports = function (api) {
       "@babel/plugin-transform-for-of",
       "babel-plugin-macros",
       "@babel/plugin-syntax-dynamic-import",
-      isTestEnv && "babel-plugin-dynamic-import-node",
+      "babel-plugin-dynamic-import-node",
       "@babel/plugin-transform-destructuring",
       [
         "@babel/plugin-proposal-class-properties",
