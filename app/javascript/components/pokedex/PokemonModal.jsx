@@ -1,5 +1,6 @@
 import React from "react";
 import { generateImageLink } from "../../functions/common";
+import PropTypes from "prop-types";
 
 export const PokemonModal = ({ pokemon, modalRef }) => {
   const name = pokemon?.species?.name;
@@ -129,4 +130,42 @@ export const PokemonModal = ({ pokemon, modalRef }) => {
     </div>
   );
 };
+
+PokemonModal.propTypes = {
+  pokemon: PropTypes.shape({
+    id: PropTypes.number,
+    weight: PropTypes.number,
+    species: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+    types: PropTypes.arrayOf(
+      PropTypes.shape({
+        type: PropTypes.shape({
+          name: PropTypes.string,
+        }),
+      })
+    ),
+    abilities: PropTypes.arrayOf(
+      PropTypes.shape({
+        ability: PropTypes.shape({
+          name: PropTypes.string,
+        }),
+      })
+    ),
+    evolutionChain: PropTypes.shape({
+      chain: PropTypes.shape({
+        species: PropTypes.object,
+      }),
+    }),
+    nationalPokedexNumber: PropTypes.number,
+    description: PropTypes.string,
+  }),
+  modalRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.instanceOf(Element),
+    }),
+  ]),
+};
+
 export default PokemonModal;

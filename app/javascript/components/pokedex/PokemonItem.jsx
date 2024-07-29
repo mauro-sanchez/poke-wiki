@@ -1,5 +1,6 @@
 import React from "react";
 import { generateImageLink } from "../../functions/common";
+import PropTypes from "prop-types";
 
 export const PokemonItem = ({ pokemon, handleClick }) => {
   const pokemonId = pokemon.id;
@@ -44,6 +45,32 @@ export const PokemonItem = ({ pokemon, handleClick }) => {
       </div>
     </div>
   );
+};
+
+PokemonItem.propTypes = {
+  pokemon: PropTypes.shape({
+    id: PropTypes.number,
+    weight: PropTypes.number,
+    species: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+    types: PropTypes.arrayOf(
+      PropTypes.shape({
+        type: PropTypes.shape({
+          name: PropTypes.string,
+        }),
+      })
+    ),
+    abilities: PropTypes.arrayOf(
+      PropTypes.shape({
+        ability: PropTypes.shape({
+          name: PropTypes.string,
+        }),
+      })
+    ),
+    nationalPokedexNumber: PropTypes.number,
+  }),
+  handleClick: PropTypes.func,
 };
 
 export default PokemonItem;
