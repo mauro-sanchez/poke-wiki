@@ -1,27 +1,6 @@
-const { generateWebpackConfig } = require("webpack");
+// See the shakacode/shakapacker README and docs directory for advice on customizing your webpackConfig.
+const { generateWebpackConfig } = require('shakapacker')
 
-const options = {
-  resolve: {
-    extensions: [
-      ".jsx",
-      ".mjs",
-      ".js",
-      ".cjs",
-      ".sass",
-      ".scss",
-      ".css",
-      ".module.sass",
-      ".module.scss",
-      ".module.css",
-      ".png",
-      ".svg",
-      ".gif",
-      ".jpeg",
-      ".jpg",
-      ".webp",
-      ".esm.mjs",
-    ],
-  },
-};
+const webpackConfig = generateWebpackConfig()
 
-module.exports = generateWebpackConfig(options);
+module.exports = webpackConfig
